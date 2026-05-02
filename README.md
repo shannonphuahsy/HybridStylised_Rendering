@@ -69,7 +69,7 @@ These files can be dropped into any Unity 6 URP project. Once imported, you can 
 
 ### **Renderer Feature**
 
-- **WatercolourRendererFeature.cs** — A custom URP Renderer Feature that applies the watercolour effect as a full‑screen pass.  
+- **WatercolorRendererFeature.cs** — A custom URP Renderer Feature that applies the watercolour effect as a full‑screen pass.  
   This script filters the **Background** layer and executes the Watercolor shader after opaque rendering, ensuring that only environment objects receive the painterly treatment while the toon‑shaded character remains unaffected.
 
 To use this feature, add it to your URP Renderer Asset under **Renderer Features**, assign the Watercolor material created from the shader, and ensure your scene objects are correctly placed on the **Foreground** and **Background** layers.
