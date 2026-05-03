@@ -25,7 +25,7 @@ Download the same build from OneDrive:
 
 ## **Running the Project**
 1. After extracting the build folder, open it.
-2. Run **HybridStylised_Rendering.exe**.
+2. Run **Hybrid Stylised Rendering.exe**.
 3. The test scene will load automatically.
 
 ## **Exiting the Test Scene**
