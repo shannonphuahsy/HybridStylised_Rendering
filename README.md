@@ -14,7 +14,7 @@ You can run a demo scene by downloading the pre‑built executable.
 
 ### **Option 2 — OneDrive Download**
 Download the same build from OneDrive:  
-**[Insert OneDrive Link Here]**
+**[https://leeds365-my.sharepoint.com/:f:/g/personal/tjwd0606_leeds_ac_uk/IgAOtgCsZ7USQb89W6Vj16FwATGVF0dIwBQ-fWwcvpI1s0o?e=Bj2YVB]**
 
 ---
 
@@ -27,6 +27,22 @@ Download the same build from OneDrive:
 1. After extracting the build folder, open it.
 2. Run **HybridStylised_Rendering.exe**.
 3. The test scene will load automatically.
+
+## **Exiting the Test Scene**
+You can close the application at any time using the standard OS shortcuts:
+
+### **Windows**
+- Press **Esc**  
+- or press **Alt + F4**
+
+### **macOS**
+- Press **Cmd + Q**  
+- or close the window using the red title‑bar button
+
+### **Linux**
+- Press **Esc**  
+- or press **Alt + F4**  
+- or close the window using your desktop environment’s window controls
 
 ---
 
