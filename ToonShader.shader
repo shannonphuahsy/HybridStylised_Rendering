@@ -22,11 +22,11 @@ Shader "Custom/ToonShader"
     {
         Tags
         {
-            "RenderPipeline"="UniversalRenderPipeline"
+            "RenderPipeline"="UniversalPipeline"
+            "UniversalMaterialType"="Lit"
             "RenderType"="Opaque"
             "Queue"="Geometry"
         }
-
 
         Pass
         {
@@ -58,11 +58,11 @@ Shader "Custom/ToonShader"
             Varyings vert (Attributes IN)
             {
                 Varyings OUT;
-                float3 normalWS = TransformObjectToWorldNormal(IN.normalOS);
-                float3 positionWS = TransformObjectToWorld(IN.positionOS.xyz);
 
-                float width = min(_OutlineWidth, 0.1);
-                positionWS += normalWS * width;
+                float3 normalWS = normalize(mul((float3x3)unity_ObjectToWorld, IN.normalOS));
+                float3 positionWS = mul(unity_ObjectToWorld, IN.positionOS).xyz;
+
+                positionWS += normalWS * _OutlineWidth;
                 OUT.positionCS = TransformWorldToHClip(positionWS);
                 return OUT;
             }
@@ -118,14 +118,13 @@ Shader "Custom/ToonShader"
             Varyings vert (Attributes IN)
             {
                 Varyings OUT;
-                float3 positionWS = TransformObjectToWorld(IN.positionOS.xyz);
-                float3 normalWS = TransformObjectToWorldNormal(IN.normalOS);
 
-                OUT.positionCS = TransformWorldToHClip(positionWS);
-                OUT.positionWS = positionWS;
-                OUT.normalWS = normalize(normalWS);
+                OUT.positionWS = mul(unity_ObjectToWorld, IN.positionOS).xyz;
+                OUT.normalWS = normalize(mul((float3x3)unity_ObjectToWorld, IN.normalOS));
+
+                OUT.positionCS = TransformWorldToHClip(OUT.positionWS);
                 OUT.uv = IN.uv;
-                OUT.shadowCoord = TransformWorldToShadowCoord(positionWS);
+                OUT.shadowCoord = TransformWorldToShadowCoord(OUT.positionWS);
 
                 return OUT;
             }
@@ -134,6 +133,7 @@ Shader "Custom/ToonShader"
             {
                 float3 normal = normalize(IN.normalWS);
                 float3 viewDir = normalize(GetWorldSpaceViewDir(IN.positionWS));
+
                 Light mainLight = GetMainLight(IN.shadowCoord);
                 float3 lightDir = normalize(mainLight.direction);
 
@@ -147,7 +147,6 @@ Shader "Custom/ToonShader"
                 );
 
                 lightBand = floor(lightBand * _ToonSteps) / _ToonSteps;
-
                 lightBand *= mainLight.shadowAttenuation;
 
                 float4 tex = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, IN.uv);
@@ -155,7 +154,6 @@ Shader "Custom/ToonShader"
 
                 float3 shaded = lerp(_ShadowColor.rgb * baseColor, baseColor, lightBand);
 
-  
                 float3 dx = ddx(normal);
                 float3 dy = ddy(normal);
                 float curvature = saturate(length(dx) + length(dy));
@@ -184,6 +182,30 @@ Shader "Custom/ToonShader"
             #pragma vertex DepthNormalsVertex
             #pragma fragment DepthNormalsFragment
             #include "Packages/com.unity.render-pipelines.universal/Shaders/DepthNormalsPass.hlsl"
+            ENDHLSL
+        }
+
+        Pass
+        {
+            Name "ShadowCaster"
+            Tags { "LightMode"="ShadowCaster" }
+
+            HLSLPROGRAM
+            #pragma vertex ShadowCasterVertex
+            #pragma fragment ShadowCasterFragment
+            #include "Packages/com.unity.render-pipelines.universal/Shaders/ShadowCasterPass.hlsl"
+            ENDHLSL
+        }
+
+        Pass
+        {
+            Name "DepthOnly"
+            Tags { "LightMode"="DepthOnly" }
+
+            HLSLPROGRAM
+            #pragma vertex DepthOnlyVertex
+            #pragma fragment DepthOnlyFragment
+            #include "Packages/com.unity.render-pipelines.universal/Shaders/DepthOnlyPass.hlsl"
             ENDHLSL
         }
     }
